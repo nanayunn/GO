@@ -315,6 +315,7 @@ package main
 
 import "fmt"
 
+/* for 반복문의 기본형 */
 func main() {
     sum := 0
     for i := 0; i < 10; i++ {
@@ -322,15 +323,8 @@ func main() {
     }
     fmt.Println(sum)
 }
-```
 
-* for문에서 선언과 ++ 부분을 생략할 수 있다.
-
-```go
-package main
-
-import "fmt"
-
+/* for문에서 선언과 ++ 부분을 생략할 수 있다. */
 func main() {
     sum := 1
     for sum < 1000 {
@@ -338,16 +332,41 @@ func main() {
     }
     fmt.Println(sum)
 }
-```
 
-* 무한 루프
-
-```go
+/* 무한 루프 */
 func main() {
     for {
     }
 }
 ```
+
+
+
+* range(범위) 설정 후 for문 이용하기
+
+```go
+/* pow 배열에 대해 순회(iterate)하는 for문 */
+var pow = []int{1, 2, 4, 8, 16, 32, 64, 128}
+
+func main() {
+    for i, v := range pow {
+        fmt.Printf("2**%d = %d\n", i, v)
+    }
+}
+
+/* '_' 기호로 index와 value 값 제거 가능 */
+func main() {
+    pow := make([]int, 10)
+    for i := range pow {
+        pow[i] = 1 << uint(i)
+    }
+    for _, value := range pow {
+        fmt.Printf("%d\n", value)
+    }
+}
+```
+
+
 
 
 
@@ -548,6 +567,8 @@ rune // int32의 다른 이름(alias)
 float32 float64
 
 complex64 complex128
+
+0에 대한 값 : 0, nil(NULL)
 ```
 
 
@@ -651,5 +672,43 @@ func main() {
             i, p[i])
     }
 }
+
+/* 슬라이싱의 또다른 예 */
+func main() {
+    p := []int{2, 3, 5, 7, 11, 13}
+    fmt.Println("p ==", p)
+    fmt.Println("p[1:4] ==", p[1:4])
+
+    // missing low index implies 0
+    fmt.Println("p[:3] ==", p[:3])
+
+    // missing high index implies len(s)
+    fmt.Println("p[4:] ==", p[4:])
+    
+    q := p[4:]
+    fmt.Println(q[:1]) /* 슬라이싱의 슬라이싱도 된다! */
+    
+}
+```
+
+
+
+#### 슬라이스 배열 만들기
+
+* 슬라이스는 `make` 함수로 만들 수 있다. 
+
+```go
+a := make([]int, 5)  // len(a)=5
+```
+
+* 이렇게 생성된 슬라이스는 0을 할당한 배열을 생성하고, 그것을 참조(refer)하는 것
+
+* `make` 함수의 세번째 매개변수로 용량(capacity)를 제한
+
+```go
+b := make([]int, 0, 5) // len(b)=0, cap(b)=5
+
+b = b[:cap(b)] // len(b)=5, cap(b)=5
+b = b[1:]      // len(b)=4, cap(b)=4
 ```
 
