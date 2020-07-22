@@ -1,13 +1,17 @@
 # Go Design Patterns
 
+출처 및 참고 사이트 : 
 
+* https://golangbyexample.com/all-design-patterns-golang/
+* 설계 패턴에 대한 위키 백과
 
 ## 1. 생성 패턴( Creational Patterns )
 
-* 객체 생성에 관련된 패턴
-* 객체의 생성과 조합을 캡슐화
-* 특정 객체가 생성되거나 변경되어도 프로그램 구조에 영향을 크게 받지 않도록 유연성을 제공
-  
+> 객체 생성에 관련된 패턴
+>
+> 객체의 생성과 조합을 캡슐화
+>
+> 특정 객체가 생성되거나 변경되어도 프로그램 구조에 영향을 크게 받지 않도록 유연성을 제공
 
 
 
@@ -944,7 +948,7 @@ Printing hierarchy for clone Folder
 
 
 
-### 1-6. 싱글톤 패턴( Singleton Design Pattern)
+### 1-6. 싱글톤 패턴( Singleton Pattern)
 
 > 가장 많이 쓰이는 디자인 패턴 중 하나
 >
@@ -1002,6 +1006,8 @@ func getInstance() *single {
 
 
 ## 2. 행동 디자인 패턴( Behavioral Design Pattern )
+
+> 클래스나 객체들이 상호작용하는 방법과 책임을 분산하는 방법을 정의하는 패턴
 
 
 
@@ -1201,7 +1207,7 @@ func main() {
 
 
 
-### 2-2. 커맨드 패턴( Command Design Pattern )
+### 2-2. 커맨드 패턴( Command Pattern )
 
 > 요청을 객체의 형태로 *캡슐화*하여 사용자가 보낸 요청을 나중에 이용할 수 있도록 
 >
@@ -1370,7 +1376,7 @@ func main() {
 
 
 
-### 2-3. 반복자 패턴( Iterator Design Pattern )
+### 2-3. 반복자 패턴( Iterator Pattern )
 
 > 객체 지향 프로그래밍에서 반복자를 사용하여 컨테이너를 가로지르며 컨테이너의 요소들에 접근하는 디자인 패턴
 
@@ -1691,7 +1697,7 @@ func main() {
 
 
 
-### 2-5. 메멘토 패턴( Memento Design Pattern )
+### 2-5. 메멘토 패턴( Memento Pattern )
 
 > 객체를 이전 상태로 되돌릴 수 있는 기능을 제공하는 소프트웨어 디자인 패턴
 >
@@ -1827,7 +1833,7 @@ Restored to State: A
 
 
 
-### 2-6. 옵저버 패턴( Observer Design Pattern )
+### 2-6. 옵저버 패턴( Observer Pattern )
 
 > 객체의 상태 변화를 관찰하는 관찰자들, 즉 옵저버들의 목록을 객체에 등록
 >
@@ -1978,7 +1984,7 @@ func main() {
 
 
 
-### 2-7. 상태 패턴( State Design Pattern )
+### 2-7. 상태 패턴( State Pattern )
 
 > 객체지향 방식으로 (유한)상태 기계를 구현하는 행위 소프트웨어 디자인 패턴
 >
@@ -2285,7 +2291,7 @@ func main() {
 
 
 
-### 2-8. 전략 패턴( Strategy Design Pattern )
+### 2-8. 전략 패턴( Strategy Pattern )
 
 > - 특정한 계열의 알고리즘들을 정의하고
 > - 각 알고리즘을 캡슐화하며
@@ -2451,7 +2457,7 @@ func main() {
 
 
 
-### 2-9. 템플릿 메소드 패턴( Template Method Design Pattern )
+### 2-9. 템플릿 메소드 패턴( Template Method Pattern )
 
 > 동작 상의 알고리즘의 프로그램 뼈대를 정의하는 행위 디자인 패턴
 >
@@ -2601,7 +2607,7 @@ func main() {
 
 
 
-### 2-10. 방문자 패턴( Visitor Design Pattern )
+### 2-10. 방문자 패턴( Visitor Pattern )
 
 > 알고리즘을 객체 구조에서 분리시키는 디자인 패턴
 >
@@ -2804,5 +2810,1125 @@ func main() {
 
 ## 3. 구조 설계 패턴( Structural Design Pattern )
 
-> 
+> 프로그램 내의 효율적인 구조를 형성하기 위해 클래스와 객체를 어떻게 **합성**하는가에 관련된 패턴
+
+
+
+### 3-1. 어댑터 패턴( Adapter pattern )
+
+>  인터페이스를 사용자가 기대하는 다른 인터페이스로 변환하는 패턴
+>
+> 호환성이 없는 인터페이스 때문에 함께 동작할 수 없는 클래스들이 함께 작동하도록 해준다.
+
+
+
+* Client가 다른 인터페이스를 implement하여 object를 쓰고자 할 때 주로 쓰인다.
+
+* 일종의 USB 변환기라고 예를 들어 설명할 수 있다.
+
+
+
+![img](https://i1.wp.com/golangbyexample.com/wp-content/uploads/2019/11/Adapter-Design-Pattern-1.jpg?w=640&ssl=1)
+
+
+
+
+
+#### 예시코드
+
+| Target                         | computer.go       |
+| ------------------------------ | ----------------- |
+| Concrete Prototype 1           | mac.go            |
+| Concrete Prototype 2 (Adapter) | windowsAdapter.go |
+| adaptee                        | windows.go        |
+| client                         | client.go         |
+
+**computer.go**
+
+```go
+package main
+
+/* USB 포트가 Square인 포트에 연결을 시도하는 인터페이스 */
+type computer interface {
+    insertInSquarePort()
+}
+```
+
+**mac.go**
+
+```go
+package main
+
+import "fmt"
+
+type mac struct {
+}
+
+/* mac은 USB 포트가 square이라고 가정한다. */
+func (m *mac) insertInSquarePort() {
+    fmt.Println("Insert square port into mac machine")
+}
+```
+
+**windowsAdapter.go**
+
+```go
+package main
+
+/* USB 포트가 circle인 윈도우 구조체에 대한 adapter */
+type windowsAdapter struct {
+	windowMachine *windows
+}
+
+func (w *windowsAdapter) insertInSquarePort() {
+	w.windowMachine.insertInCirclePort()
+}
+```
+
+**windows.go**
+
+```go
+package main
+
+import "fmt"
+
+type windows struct{}
+
+func (w *windows) insertInCirclePort() {
+    fmt.Println("Insert circle port into windows machine")
+}
+```
+
+**client.go**
+
+```go
+package main
+
+type client struct {
+}
+
+func (c *client) insertSquareUsbInComputer(com computer) {
+    com.insertInSquarePort()
+}
+```
+
+**main.go**
+
+```go
+package main
+
+func main() {
+    client := &client{} //구조체 포인터 생성
+    mac := &mac{} //mac 구조체 포인터 생성
+    client.insertSquareUsbInComputer(mac) //mac은 square USB라 adapter 필요X
+    windowsMachine := &windows{} //window 구조체 포인터 생성
+    windowsMachineAdapter := &windowsAdapter{
+        windowMachine: windowsMachine, //window 포인터 값으로 초기화
+    }
+    client.insertSquareUsbInComputer(windowsMachineAdapter) //adapter을 거친 윈도우를 함수에 넣어 실행
+}
+```
+
+
+
+### 3-2. 브릿지 패턴( Bridge pattern )
+
+> 구현부에서 추상층을 분리하여 각자 독립적으로 변형할 수 있게 하는 패턴
+
+
+
+* 하나의 복합적인 클래스를 두 개로 나눈다.
+  * Abstraction(추상층)
+    * 정제된 추상층(Refined Abstraction)
+    * implementation의 참조를 포함한다.
+  * Implementation
+    * 구체적인 Implementation(Concrete Implementation)이라고 불린다.
+
+
+
+* 예를 들어, 
+  * 두 가지의 컴퓨터 mac과 window, 
+  * 두 가지의 프린터 epson과 hp가 있으며
+  * 각각 어떤 조합으로든 작동하게 하고싶을 때,
+  * 총 2*2 = 4가지의 경우의 수가 나오며, 각각의 경우의 수가 작동할 수 있도록 하는 것이 브릿지 패턴이다.
+
+![img](https://i1.wp.com/golangbyexample.com/wp-content/uploads/2019/11/Bridge-Design-Pattern-2.jpg?w=640&ssl=1)
+
+
+
+
+
+#### 예시코드
+
+| Abstraction               | computer.go |
+| ------------------------- | ----------- |
+| Refined Abstraction 1     | win.go      |
+| Refined Abstraction 2     | mac.go      |
+| Implementation            | printer.go  |
+| Concrete Implementation 1 | epson.go    |
+| Concrete Implementation 2 | hp.go       |
+| Client                    | main.go     |
+
+**computer.go**
+
+```go
+package main
+
+/* 각각의 세부 구조체에 포함될 메소드 인터페이스 */
+type computer interface {
+    print()
+    setPrinter(printer)
+}
+```
+
+**mac.go**
+
+```go
+package main
+
+import "fmt"
+
+/* 컴퓨터 인터페이스를 implement하는 구조체에서는 프린터를 변수로 갖는다. */
+type mac struct {
+    printer printer
+}
+
+func (m *mac) print() {
+    fmt.Println("Print request for mac")
+    m.printer.printFile()
+}
+
+func (m *mac) setPrinter(p printer) {
+    m.printer = p
+}
+```
+
+**windows.go**
+
+```go
+package main
+
+import "fmt"
+
+type windows struct {
+    printer printer
+}
+
+func (w *windows) print() {
+    fmt.Println("Print request for windows")
+    w.printer.printFile()
+}
+
+func (w *windows) setPrinter(p printer) {
+    w.printer = p
+}
+```
+
+**printer.go**
+
+```go
+package main
+/* 프린터는 각 프린터에서 프린팅하고 있다는 출력문을 알리는 메소드를 포함 */
+type printer interface {
+    printFile()
+}
+```
+
+**epson.go**
+
+```go
+package main
+
+import "fmt"
+
+type epson struct {
+}
+
+func (p *epson) printFile() {
+    fmt.Println("Printing by a EPSON Printer")
+}
+```
+
+**hp.go**
+
+```go
+package main
+
+import "fmt"
+
+type hp struct {
+}
+
+func (p *hp) printFile() {
+    fmt.Println("Printing by a HP Printer")
+}
+```
+
+**main.go**
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+    hpPrinter := &hp{}
+    epsonPrinter := &epson{}
+    macComputer := &mac{}
+    macComputer.setPrinter(hpPrinter)
+    macComputer.print()
+    fmt.Println()
+    macComputer.setPrinter(epsonPrinter)
+    macComputer.print()
+    fmt.Println()
+    winComputer := &windows{}
+    winComputer.setPrinter(hpPrinter)
+    winComputer.print()
+    fmt.Println()
+    winComputer.setPrinter(epsonPrinter)
+    winComputer.print()
+    fmt.Println()
+}
+```
+
+**Output**
+
+```go
+Print request for mac
+Printing by a HP Printer
+
+Print request for mac
+Printing by a EPSON Printer
+
+Print request for windows
+Printing by a HP Printer
+
+Print request for windows
+Printing by a EPSON Printer
+```
+
+
+
+### 3-3. 컴포지트 패턴( Composite pattern )
+
+> 객체들의 관계를 트리 구조로 구성하여 부분-전체 계층을 표현하는 패턴
+>
+> 사용자가 단일 객체와 복합 객체 모두 동일하게 다루도록 한다.
+
+
+
+* composite라는 object 그룹을 단일 객체로 다루고 싶을 때 이용된다.
+* object 그룹을 tree 구조체로 형성할 수 있도록 해준다.
+* 파일과 폴더가 동일한 방식으로 다뤄지는 것을 예로 들 수 있다.
+
+
+
+![img](https://i2.wp.com/golangbyexample.com/wp-content/uploads/2019/11/Composite-Design-Pattern-1.jpg?w=640&ssl=1)
+
+
+
+#### 예시코드
+
+| Component interface | component.go |
+| ------------------- | ------------ |
+| Composite           | folder.go    |
+| Leaf                | file.go      |
+| client              | main.go      |
+
+**component.go**
+
+```go
+package main
+
+type component interface {
+    search(string)
+}
+```
+
+**folder.go**
+
+```go
+package main
+
+import "fmt"
+
+/* file을 component 배열로 갖고 있는 folder - composite를 나타냄 */
+type folder struct {
+    components []component
+    name       string
+}
+
+func (f *folder) search(keyword string) {
+    fmt.Printf("Serching recursively for keyword %s in folder %s\n", keyword, f.name)
+    for _, composite := range f.components {
+        composite.search(keyword)
+    }
+}
+
+func (f *folder) add(c component) {
+    f.components = append(f.components, c)
+}
+```
+
+**file.go**
+
+```go
+package main
+
+import "fmt"
+
+/* 단일 객체 file */
+type file struct {
+    name string
+}
+
+func (f *file) search(keyword string) {
+    fmt.Printf("Searching for keyword %s in file %s\n", keyword, f.name)
+}
+
+func (f *file) getName() string {
+    return f.name
+}
+```
+
+**main.go**
+
+```go
+package main
+
+func main() {
+    file1 := &file{name: "File1"}// 각각의 file 구조체를 선언 및 지정된 값으로 초기화
+    file2 := &file{name: "File2"}
+    file3 := &file{name: "File3"}
+    folder1 := &folder{ // folder 구조체도 마찬가지로 선언 및 초기화
+        name: "Folder1",
+    }
+    folder1.add(file1)
+    folder2 := &folder{
+        name: "Folder2",
+    }
+    folder2.add(file2) //add()함수를 이용하여 folder 구조체 내의 배열에 file을 추가
+    folder2.add(file3)
+    folder2.add(folder1)
+    folder2.search("rose")
+}
+```
+
+**Output:**
+
+```go
+Serching recursively for keyword rose in folder Folder2
+Searching for keyword rose in file File2
+Searching for keyword rose in file File3
+Serching recursively for keyword rose in folder Folder1
+Searching for keyword rose in file File1
+```
+
+
+
+### 3-4. 데코레이터 패턴( Decorator pattern )
+
+
+
+> 주어진 상황 및 용도에 따라 어떤 객체에 책임을 덧붙이는 패턴
+>
+> 기능 확장이 필요할 때 서브클래싱 대신 쓸 수 있는 유연한 대안이 될 수 있다.
+
+
+
+* 기본 기능에 추가할 수 있는 기능의 종류가 많은 경우에 **각 추가 기능을 Decorator 클래스로 정의** 한 후 필요한 Decorator 객체를 조합함으로써 **추가 기능의 조합을 설계** 하는 방식이다.
+  * 예를 들어, 기본 도로 표시 기능에 차선 표시, 교통량 표시, 교차로 표시, 단속 카메라 표시의 4가지 추가 기능이 있을 때 추가 기능의 모든 조합은 15가지가 된다.
+* 데코레이터 패턴을 이용하여 필요 추가 기능의 조합을 동적으로 생성할 수 있다.
+
+
+
+![img](https://gmlwjd9405.github.io/images/design-pattern-decorator/decorator-pattern.png)
+
+* 역할이 수행하는 작업
+  * Component
+    * 기본 기능을 뜻하는 ConcreteComponent와 추가 기능을 뜻하는 Decorator의 공통 기능을 정의
+    * 클라이언트는 Component를 통해 실제 객체를 사용함
+  * ConcreteComponent
+    * 기본 기능을 구현하는 클래스
+  * Decorator
+    * 많은 수가 존재하는 구체적인 Decorator의 공통 기능을 제공
+  * ConcreteDecoratorA, ConcreteDecoratorB
+    * Decorator의 하위 클래스로 기본 기능에 추가되는 개별적인 기능을 뜻함
+    * ConcreteDecorator 클래스는 ConcreteComponent 객체에 대한 참조가 필요한데, 이는 
+    * Decorator 클래스에서 Component 클래스로의 ‘합성(composition) 관계’를 통해 표현됨
+      
+
+
+
+#### 예시코드
+
+```go
+type Object func(int) int
+
+func LogDecorate(fn Object) Object {
+    return func(n int) int {
+        log.Println("Starting the execution with the integer", n)
+
+        result := fn(n)
+
+        log.Println("Execution is completed with the result", result)
+
+        return result
+    }
+}
+```
+
+```go
+func Double(n int) int {
+    return n * 2
+}
+
+f := LogDecorate(Double)
+
+f(5)
+// Starting execution with the integer 5
+// Execution is completed with the result 10
+```
+
+
+
+### 3-5. 퍼사드 패턴( Facade pattern )
+
+> Facade 는 "건물의 정면"을 의미
+>
+> 어떤 소프트웨어의 다른 커다란 코드 부분에 대한 간략화된 인터페이스를 제공하는 객체
+
+
+
+* 공통적인 작업에 대해 간편한 메소드들을 제공
+* 라이브러리를 사용하는 코드들을 좀 더 읽기 쉽게 해준다.
+* 라이브러리 바깥쪽의 코드가 라이브러리의 안쪽 코드에 의존하는 일을 감소 시켜준다.
+  * 즉, 유연성 증가
+
+
+
+* 래퍼(wrapper)가 특정 인터페이스를 준수해야 하며, 폴리모픽 기능을 지원해야 할 경우에는 어댑터 패턴을 쓴다. 
+* 단지, 쉽고 단순한 인터페이스를 이용하고 싶을 경우에는 퍼사드를 쓴다.
+
+
+
+![img](https://i2.wp.com/golangbyexample.com/wp-content/uploads/2019/11/Facade-Design-Pattern-1.jpg?w=640&ssl=1)
+
+
+
+
+
+#### 예시코드
+
+| Wallet Facade | walletFacade.go |
+| ------------- | --------------- |
+| account       | account.go      |
+| securityCode  | securityCode.go |
+| wallet        | wallet.go       |
+| ledger        | ledger.go       |
+| notification  | notification.go |
+| Client        | main.go         |
+
+**walletFacade.go**
+
+```go
+package main
+
+import "fmt"
+
+type walletFacade struct {
+    account      *account
+    wallet       *wallet
+    securityCode *securityCode
+    notification *notification
+    ledger       *ledger
+}
+
+func newWalletFacade(accountID string, code int) *walletFacade {
+    fmt.Println("Starting create account")
+    walletFacacde := &walletFacade{
+        account:      newAccount(accountID),
+        securityCode: newSecurityCode(code),
+        wallet:       newWallet(),
+        notification: ¬ification{},
+        ledger:       &ledger{},
+    }
+    fmt.Println("Account created")
+    return walletFacacde
+}
+
+func (w *walletFacade) addMoneyToWallet(accountID string, securityCode int, amount int) error {
+    fmt.Println("Starting add money to wallet")
+    err := w.account.checkAccount(accountID)
+    if err != nil {
+        return err
+    }
+    err = w.securityCode.checkCode(securityCode)
+    if err != nil {
+        return err
+    }
+    w.wallet.creditBalance(amount)
+    w.notification.sendWalletCreditNotification()
+    w.ledger.makeEntry(accountID, "credit", amount)
+    return nil
+}
+
+func (w *walletFacade) deductMoneyFromWallet(accountID string, securityCode int, amount int) error {
+    fmt.Println("Starting debit money from wallet")
+    err := w.account.checkAccount(accountID)
+    if err != nil {
+        return err
+    }
+    err = w.securityCode.checkCode(securityCode)
+    if err != nil {
+        return err
+    }
+    err = w.wallet.debitBalance(amount)
+    if err != nil {
+        return err
+    }
+    w.notification.sendWalletDebitNotification()
+    w.ledger.makeEntry(accountID, "credit", amount)
+    return nil
+}
+```
+
+**account.go**
+
+```go
+package main
+
+import "fmt"
+
+type account struct {
+    name string
+}
+
+func newAccount(accountName string) *account {
+    return &account{
+        name: accountName,
+    }
+}
+
+func (a *account) checkAccount(accountName string) error {
+    if a.name != accountName {
+        return fmt.Errorf("Account Name is incorrect")
+    }
+    fmt.Println("Account Verified")
+    return nil
+}
+```
+
+**securityCode.go**
+
+```go
+package main
+
+import "fmt"
+
+type securityCode struct {
+    code int
+}
+
+func newSecurityCode(code int) *securityCode {
+    return &securityCode{
+        code: code,
+    }
+}
+
+func (s *securityCode) checkCode(incomingCode int) error {
+    if s.code != incomingCode {
+        return fmt.Errorf("Security Code is incorrect")
+    }
+    fmt.Println("SecurityCode Verified")
+    return nil
+}
+```
+
+**wallet.go**
+
+```go
+package main
+
+import "fmt"
+
+type wallet struct {
+    balance int
+}
+
+func newWallet() *wallet {
+    return &wallet{
+        balance: 0,
+    }
+}
+
+func (w *wallet) creditBalance(amount int) {
+    w.balance += amount
+    fmt.Println("Wallet balance added successfully")
+    return
+}
+
+func (w *wallet) debitBalance(amount int) error {
+    if w.balance < amount {
+        return fmt.Errorf("Balance is not sufficient")
+    }
+    fmt.Println("Wallet balance is Sufficient")
+    w.balance = w.balance - amount
+    return nil
+}
+```
+
+**ledger.go**
+
+```go
+package main
+
+import "fmt"
+
+type ledger struct {
+}
+
+func (s *ledger) makeEntry(accountID, txnType string, amount int) {
+    fmt.Printf("Make ledger entry for accountId %s with txnType %s for amount %d", accountID, txnType, amount)
+    return
+}
+```
+
+**notification.go**
+
+```go
+package main
+
+import "fmt"
+
+type notification struct {
+}
+
+func (n *notification) sendWalletCreditNotification() {
+    fmt.Println("Sending wallet credit notification")
+}
+
+func (n *notification) sendWalletDebitNotification() {
+    fmt.Println("Sending wallet debit notification")
+}
+```
+
+**main.go**
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+)
+
+func main() {
+    fmt.Println()
+    walletFacade := newWalletFacade("abc", 1234)
+    fmt.Println()
+    err := walletFacade.addMoneyToWallet("abc", 1234, 10)
+    if err != nil {
+        log.Fatalf("Error: %s\n", err.Error())
+    }
+    fmt.Println()
+    err = walletFacade.deductMoneyFromWallet("ab", 1234, 5)
+    if err != nil {
+        log.Fatalf("Error: %s\n", err.Error())
+    }
+}
+```
+
+**Output:**
+
+```go
+Starting create account
+Account created
+
+Starting add money to wallet
+Account Verified
+SecurityCode Verified
+Wallet balance added successfully
+Sending wallet credit notification
+Make ledger entry for accountId abc with txnType credit for amount 10
+
+Starting debit money from wallet
+Account Verified
+SecurityCode Verified
+Wallet balance is Sufficient
+Sending wallet debit notification
+Make ledger entry for accountId abc with txnType debit for amount 5
+```
+
+
+
+### 3-6. 플라이웨이트 패턴( Flyweight pattern )
+
+> 동일하거나 유사한 객체들 사이에 *가능한 많은 데이터*를 서로 공유하여 사용하도록 하여 메모리 사용량을 최소화하는 디자인 패턴
+>
+>  종종 object의 일부 상태 정보는 공유될 수 있는데, 
+>
+> 플라이웨이트 패턴에서는 이와 같은 상태 정보를 외부 자료구조에 저장하여 플라이웨이트 오브젝트가 잠깐 동안 사용할 수 있도록 전달
+
+
+
+* 동일하거나 유사한 객체들이 다수 생성될 때 사용된다.
+  * 객체들은 flyweight object로 불리며, 불변(immutable)의 성질을 띈다.
+
+
+
+* 게임에서 적군과 아군이 각각 다른 복장을 하고 있는 것을 예로 들 수 있다
+
+  * 동일한 '복장' 아이템이 적군이냐 아군이냐에 따라 2가지의 패턴으로 나뉘는 것이다.
+  * 참고한 예시 코드에서는 카운터 스트라이크 게임을 예로 들었다.
+
+  
+
+![img](https://i2.wp.com/golangbyexample.com/wp-content/uploads/2019/11/Flyweight-Design-Pattern-1-1.jpg?w=640&ssl=1)
+
+
+
+#### 예시코드
+
+| Flyweight Factory           | dressFactory.go          |
+| --------------------------- | ------------------------ |
+| Flyweight Interface         | dress.go                 |
+| Concrete Flyweight Object 1 | terroristDress.go        |
+| Concrete Flyweight Object 1 | counterTerroristDress.go |
+| Context                     | player.go                |
+| Client                      | main.go                  |
+
+**dressFactory.go**
+
+```go
+package main
+
+import "fmt"
+
+const (
+    //아군
+    TerroristDressType = "tDress"
+    //적군
+    CounterTerrroristDressType = "ctDress"
+)
+
+var (
+    dressFactorySingleInstance = &dressFactory{
+        dressMap: make(map[string]dress), //key string, value dress
+    }
+)
+
+type dressFactory struct {
+    dressMap map[string]dress
+}
+
+func (d *dressFactory) getDressByType(dressType string) (dress, error) {
+    if d.dressMap[dressType] != nil {
+        return d.dressMap[dressType], nil
+    }
+    if dressType == TerroristDressType {
+        d.dressMap[dressType] = newTerroristDress()
+        return d.dressMap[dressType], nil
+    }
+    if dressType == CounterTerrroristDressType {
+        d.dressMap[dressType] = newCounterTerroristDress()
+        return d.dressMap[dressType], nil
+    }
+    return nil, fmt.Errorf("Wrong dress type passed")
+}
+
+func getDressFactorySingleInstance() *dressFactory {
+    return dressFactorySingleInstance
+}
+```
+
+**dress.go**
+
+```go
+package main
+
+type dress interface {
+    getColor() string
+}
+```
+
+**terroristDress.go**
+
+```go
+package main
+
+import "fmt"
+
+const (
+    //아군 복장 타입
+    TerroristDressType = "tDress"
+    //적군 복장 타입
+    CounterTerrroristDressType = "ctDress"
+)
+
+var (
+    dressFactorySingleInstance = &dressFactory{
+        dressMap: make(map[string]dress),
+    }
+)
+
+type dressFactory struct {
+    dressMap map[string]dress
+}
+
+func (d *dressFactory) getDressByType(dressType string) (dress, error) {
+    if d.dressMap[dressType] != nil {
+        return d.dressMap[dressType], nil
+    }
+    if dressType == TerroristDressType {
+        d.dressMap[dressType] = newTerroristDress()
+        return d.dressMap[dressType], nil
+    }
+    if dressType == CounterTerrroristDressType {
+        d.dressMap[dressType] = newCounterTerroristDress()
+        return d.dressMap[dressType], nil
+    }
+    return nil, fmt.Errorf("Wrong dress type passed")
+}
+
+func getDressFactorySingleInstance() *dressFactory {
+    return dressFactorySingleInstance
+}
+```
+
+**counterTerroristDress.go**
+
+```go
+package main
+
+type counterTerroristDress struct {
+    color string
+}
+
+func (c *counterTerroristDress) getColor() string {
+    return c.color
+}
+
+func newCounterTerroristDress() *counterTerroristDress {
+    return &counterTerroristDress{color: "green"}
+}
+```
+
+**player.go**
+
+```go
+package main
+
+type player struct {
+    dress      dress
+    playerType string
+    lat        int
+    long       int
+}
+
+func newPlayer(playerType, dressType string) *player {
+    dress, _ := getDressFactorySingleInstance().getDressByType(dressType)
+    return &player{
+        playerType: playerType,
+        dress:      dress,
+    }
+}
+
+func (p *player) newLocation(lat, long int) {
+    p.lat = lat
+    p.long = long
+}
+```
+
+**main.go**
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+    game := newGame()
+    //아군을 추가
+    game.addTerrorist(TerroristDressType)
+    game.addTerrorist(TerroristDressType)
+    game.addTerrorist(TerroristDressType)
+    game.addTerrorist(TerroristDressType)
+    //상대 적군을 추가
+    game.addCounterTerrorist(CounterTerrroristDressType)
+    game.addCounterTerrorist(CounterTerrroristDressType)
+    game.addCounterTerrorist(CounterTerrroristDressType)
+    dressFactoryInstance := getDressFactorySingleInstance()
+    for dressType, dress := range dressFactoryInstance.dressMap {
+        fmt.Printf("DressColorType: %s\nDressColor: %s\n", dressType, dress.getColor())
+    }
+}
+```
+
+**Output:**
+
+```go
+DressColorType: ctDress
+DressColor: green
+DressColorType: tDress
+DressColor: red
+```
+
+
+
+### 3-7. 프록시 패턴( Proxy pattern )
+
+> 프록시는 다른 무언가와 이어지는 인터페이스의 역할을 하는 클래스
+>
+> 복합적인 오브젝트들의 다수의 복사본이 존재해야만 하는 상황에서 프록시 패턴은 애플리케이션의 메모리 사용량을 줄이기 위해서 flyweight pattern과 결합된 형태로 나올 수도 있다.
+
+
+
+* proxy 객체는 main object와 똑같은 인터페이스를 implement 한다.
+  * 따라서, main object에 대한 실질적인 로직이 시작되기 이전에 proxy 객체로 메소드를 실행할 수 있다.
+*  어플리케이션 서버에 대해 Nginix 서버를 이용하는 것을 예로 들 수 있다.
+
+
+
+![img](https://i0.wp.com/golangbyexample.com/wp-content/uploads/2019/11/Proxy-Design-Pattern-1.jpg?w=640&ssl=1)
+
+
+
+* 구성요소
+  * Subject : 
+    * 프록시와 realSubject가 implement 하는 인터페이스
+  * Proxy : 
+    * realSubject를 포함하며, 프로세스 처리가 끝난 후 realSubject에 요청
+  * RealSubject:
+    *  실제 main object이며, main logic을 갖고 있다.
+  * Client:
+    * 동일한 인터페이스를 따르는 Proxy와 RealSubject 모두와 상호작용 가능
+
+
+
+#### 예시코드
+
+| subject     | server.go      |
+| ----------- | -------------- |
+| proxy       | nginx.go       |
+| realSubject | application.go |
+| client      | main.go        |
+
+**server.go**
+
+```go
+package main
+
+/* proxy와 realSubject가 동일하게 따르는 subject 인터페이스 */
+type server interface {
+    handleRequest(string, string) (int, string)
+}
+```
+
+**nginx.go**
+
+```go
+package main
+
+type nginx struct {
+    application       *application
+    maxAllowedRequest int
+    rateLimiter       map[string]int
+}
+
+/* 생성자, 초기화 */
+func newNginxServer() *nginx {
+    return &nginx{
+        application:       &application{},
+        maxAllowedRequest: 2,
+        rateLimiter:       make(map[string]int), //key string, value int인 맵
+    }
+}
+
+func (n *nginx) handleRequest(url, method string) (int, string) {
+    allowed := n.checkRateLimiting(url)
+    if !allowed {
+        return 403, "Not Allowed"
+    }
+    return n.application.handleRequest(url, method)
+}
+
+func (n *nginx) checkRateLimiting(url string) bool {
+    if n.rateLimiter[url] == 0 {
+        n.rateLimiter[url] = 1
+    }
+    if n.rateLimiter[url] > n.maxAllowedRequest {
+        return false
+    }
+    n.rateLimiter[url] = n.rateLimiter[url] + 1
+    return true
+}
+```
+
+**application.go**
+
+```go
+package main
+
+type application struct {
+}
+
+func (a *application) handleRequest(url, method string) (int, string) {
+    if url == "/app/status" && method == "GET" {
+        return 200, "Ok"
+    }
+    if url == "/create/user" && method == "POST" {
+        return 201, "User Created"
+    }
+    return 404, "Not Ok"
+}
+```
+
+**main.go**
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+    nginxServer := newNginxServer()
+    appStatusURL := "/app/status"
+    createuserURL := "/create/user"
+    httpCode, body := nginxServer.handleRequest(appStatusURL, "GET")
+    fmt.Printf("\nUrl: %s\nHttpCode: %d\nBody: %s\n", appStatusURL, httpCode, body)
+    httpCode, body = nginxServer.handleRequest(appStatusURL, "GET")
+    fmt.Printf("\nUrl: %s\nHttpCode: %d\nBody: %s\n", appStatusURL, httpCode, body)
+    httpCode, body = nginxServer.handleRequest(appStatusURL, "GET")
+    fmt.Printf("\nUrl: %s\nHttpCode: %d\nBody: %s\n", appStatusURL, httpCode, body)
+    httpCode, body = nginxServer.handleRequest(createuserURL, "POST")
+    fmt.Printf("\nUrl: %s\nHttpCode: %d\nBody: %s\n", appStatusURL, httpCode, body)
+    httpCode, body = nginxServer.handleRequest(createuserURL, "GET")
+    fmt.Printf("\nUrl: %s\nHttpCode: %d\nBody: %s\n", appStatusURL, httpCode, body)
+}
+```
+
+**Output:**
+
+```go
+Url: /app/status
+HttpCode: 200
+Body: Ok
+
+Url: /app/status
+HttpCode: 200
+Body: Ok
+
+Url: /app/status
+HttpCode: 403
+Body: Not Allowed
+
+Url: /app/status
+HttpCode: 201
+Body: User Created
+
+Url: /app/status
+HttpCode: 404
+Body: Not Ok
+```
 
