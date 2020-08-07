@@ -90,8 +90,8 @@
 
 ```dockerfile
 # vertx/vertx3 debian version
-FROM subicura/vertx3:3.3.1
-MAINTAINER chungsub.kim@purpleworks.co.kr
+FROM ubuntu:14.04
+MAINTAINER ny.kim@piolink.com
 
 ADD build/distributions/app-3.3.1.tar /
 ADD config.template.json /app-3.3.1/bin/config.json
@@ -301,7 +301,58 @@ CMD ["start.sh"]
 ### 1. Docker 설치하기
 
 * 리눅스
-* `curl -fsSL https://get.docker.com/ | sudo sh`
+
+* 이전 버전 제거
+
+  ```
+  sudo apt-get remove docker docker-engine docker.io containerd runc
+  ```
+
+
+
+* `sudo snap install docker`
+
+
+
+* docker 저장소 설정
+
+  1. apt 패키지 업데이트
+
+     * `sudo apt-get update`
+
+  2. apt가 HTTPS를 통해 저장소를 사용할 수 있도록 패키지를 설치
+
+     ```
+     sudo apt-get install \
+       apt-transport-https \
+       ca-certificates \
+       curl \
+       gnupg-agent \
+       software-properties-common
+     ```
+
+  3. Docker의 공식 GPG 키를 추가
+
+     ```
+     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+     ```
+
+  4. 키가 잘 추가되었는지 확인
+
+     ```
+     sudo apt-key fingerprint 0EBFCD88
+     ```
+
+  5. (안정화된 저장소로 설정하기 위한 추가 명령)
+
+     ```
+     sudo add-apt-repository \
+        "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+        $(lsb_release -cs) \
+        stable"
+     ```
+
+     
 
 
 
@@ -383,10 +434,11 @@ CMD ["start.sh"]
 
   * 이미지가 단계별로 빌드되는 모습을 볼 수 있다.
 
-  * ㅇ
+  
 
-  * `docker run --publish 8000:8080 --detach --name bb bulletinboard:1.0`로 이미지 컨테이너로 실행
-
+  
+* `docker run --publish 8000:8080 --detach --name bb bulletinboard:1.0`로 이미지 컨테이너로 실행
+  
     * `--publish`
       * 호스트의 포트 8000에서 들어오는 트래픽을 컨테이너의 포트 8080으로 전달하도록 요청
       * 컨테이너에는 고유한 개인 포트 세트가 있으므로 네트워크의 포트에 도달하려면 이러한 방식으로 트래픽을 전달해야함 
@@ -395,22 +447,22 @@ CMD ["start.sh"]
       * 이 컨테이너를 백그라운드에서 실행하도록 요청
     * `--name`
       * 컨테이너를 참조할 수있는 이름을 지정
-        * 예 :  `--name bb`
-
-    <img src="https://user-images.githubusercontent.com/58680504/89364268-15e38380-d70d-11ea-8705-80b90ec90d53.png" alt="스크린샷, 2020-08-05 11-12-33" style="zoom:200%;" />
-
-    * `docker ps`로 컨테이너 생성 및 실행 여부 확인
-
-    ![스크린샷, 2020-08-05 11-12-55](https://user-images.githubusercontent.com/58680504/89364271-167c1a00-d70d-11ea-8e63-00e7a5b9efd2.png)
-
-    
-
-  * 이후 `localhost:8000`으로 접속하면, 컨테이너에 띄운 애플리케이션에 접속할 수 있다!
-
-  ![스크린샷, 2020-08-05 12-39-56](https://user-images.githubusercontent.com/58680504/89369343-cb680400-d718-11ea-864d-8ba885ba20cc.png)
-
+      * 예 :  `--name bb`
+  
+  <img src="https://user-images.githubusercontent.com/58680504/89364268-15e38380-d70d-11ea-8705-80b90ec90d53.png" alt="스크린샷, 2020-08-05 11-12-33" style="zoom:200%;" />
+  
+  * `docker ps`로 컨테이너 생성 및 실행 여부 확인
+  
+  ![스크린샷, 2020-08-05 11-12-55](https://user-images.githubusercontent.com/58680504/89364271-167c1a00-d70d-11ea-8e63-00e7a5b9efd2.png)
+  
+  
+  
+* 이후 `localhost:8000`으로 접속하면, 컨테이너에 띄운 애플리케이션에 접속할 수 있다!
+  
+![스크린샷, 2020-08-05 12-39-56](https://user-images.githubusercontent.com/58680504/89369343-cb680400-d718-11ea-864d-8ba885ba20cc.png)
   
 
+  
   
 
 
@@ -482,21 +534,151 @@ CMD ["start.sh"]
 
 
 
+## 5. Docker-Compose
 
-
-## 5. Production 환경에서 Docker를 활용한 애플리케이션 실행
-
-
-
-### 1.  오케스트레이션
-
-* 오케스트레이터란( Orchestrator )?
-
-  * 컨테이너화 된 응용프로그램을 관리, 확장 및 유지 관리하는 도구 
-
-  > 예 : Kubernetes, Docker Swarm
+### 1. Docker-compose란?
 
 
 
+* 다중 컨테이너로 이루어지는 Docker 애플리케이션을 정의 및 실행하기 위한 도구
+* 특징
+  * YAML 문법을 사용
+  * 단일 명령으로 모든 서비스를 구성
+  * 변경 후 다시 `docker-compose up`을 하였을 때, 변경된 컨테이너만 재생성
+  * 컨테이너가 생성될 때 볼륨 데이터를 보존
 
 
+
+* Docker-compose가 적용된는 3단계 프로세스
+  1. Dockerfile : 
+     * 어디에서나 실행이 가능하도록 애플리케이션의 **환경**을 정의
+  2. Docker-Compose.yml : 
+     * 앱을 구성하는 서비스를 정의
+     * 각각의 서비스는 하나의 컨테이너로 실행
+  3. `Docker-compose up`:
+     * Docker-compose를 이용하여 애플리케이션을 실행하는 명령어
+
+
+
+* Docker-compose 예시
+
+  ```yaml
+  version: '2.0'
+  services:
+    web:
+      build: .
+      ports:
+      - "5000:5000"
+      volumes:
+      - .:/code
+      - logvolume01:/var/log
+      links:
+      - redis
+    redis:
+      image: redis
+  volumes:
+    logvolume01: {}
+  ```
+
+  
+
+
+
+### 2. Docker-compose로 간단한 Python 웹 어플리케이션 빌드
+
+
+
+1. 테스트용 디렉토리 생성 후 이동
+
+   1-1. `mkdir composetest`
+
+   1-2. `cd composetest`
+
+2. 파이썬 파일 생성
+
+   2-1. `vi app.py`
+
+   * ```python
+     import time
+     import redis
+     from flask import Flask
+     
+     app = Flask(__name__)
+     cache = redis.Redis(host='redis', port=6379)
+     
+     
+     def get_hit_count():
+         retries = 5
+         while True:
+             try:
+                 return cache.incr('hits')
+             except redis.exceptions.ConnectionError as exc:
+                 if retries == 0:
+                     raise exc
+                 retries -= 1
+                 time.sleep(0.5)
+     
+     
+     @app.route('/')
+     def hello():
+         count = get_hit_count()
+         return 'Hello World! I have been seen {} times.\n'.format(count)
+     ```
+
+3. requirements.txt 파일 생성
+
+   * ```
+     flask
+     redis
+     ```
+
+4. Dockerfile 생성
+
+   * ```dockerfile
+     #python 3.7 이미지를 기반으로 
+     From python:3.7-alpine
+     
+     #작업 디렉토리는 /code
+     WORKDIR /code
+     
+     #Flask 실행에 필요한 환경변수 설정
+     ENV FLASK_APP app.py
+     ENV FLASK_RUN_HOST 0.0.0.0
+     
+     # gcc 및 기타 종속성 라이브러리 설치
+     RUN apk add --no-cache gcc musl-dev linux-headers
+     
+     #파이썬 종속성 라이브러리가 적힌 requirements.txt 파일을 복사 및 설치
+     COPY requirements.txt requirements.txt
+     RUN pip install -r requirements.txt
+     
+     # 컨테이너가 포트 5000에서 대기하도록 설정, 이미지에 메타 데이터 추가
+     EXPOSE 5000
+     
+     # . 프로젝트의 현재 디렉토리를 . 이미지의 workdir에 복사
+     COPY . .
+     
+     # 컨테이너의 default 명령어를 다음과 같이 설정
+     CMD ["flask", "run"]
+     ```
+
+5. `docker-compose up`으로 애플리케이션 빌드 및 실행
+
+
+
+* 결과 화면
+
+  ![스크린샷, 2020-08-07 14-48-18](https://user-images.githubusercontent.com/58680504/89614232-f8561b80-d8be-11ea-9df6-4f42a1ebdc56.png)
+  ![스크린샷, 2020-08-07 14-48-33](https://user-images.githubusercontent.com/58680504/89614235-f9874880-d8be-11ea-8765-61655e9f88c0.png)
+
+  
+
+  * `localhost:5000`으로 접속하면, 다음과 같이 Flask를 이용한 웹이 실행되고 있음을 볼 수 있다.
+
+  ![스크린샷, 2020-08-07 14-48-46](https://user-images.githubusercontent.com/58680504/89614238-fa1fdf00-d8be-11ea-9fee-8a9b23879045.png)
+
+  
+
+  * 접속했을 때 남는 로그
+
+  ![스크린샷, 2020-08-07 14-49-02](https://user-images.githubusercontent.com/58680504/89614240-fab87580-d8be-11ea-9e00-8401195701b7.png)
