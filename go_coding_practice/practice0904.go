@@ -6,7 +6,7 @@ import (
 	"strconv"
 )
 
-func inputNumber(num int) int {
+func inputNumber() int {
 	var n string
 
 	fmt.Scan(&n)
@@ -16,17 +16,15 @@ func inputNumber(num int) int {
 		os.Exit(1)
 	}
 
-	num = parsednum
+	num := parsednum
 
 	return num
 }
 
 func main() {
-	var a int
-	var b int
 
-	A := inputNumber(a)
-	B := inputNumber(b)
+	A := inputNumber()
+	B := inputNumber()
 
 	rest := A - B
 
