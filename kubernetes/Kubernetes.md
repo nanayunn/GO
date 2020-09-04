@@ -218,37 +218,52 @@
   -  생성되지 않은 Pod이 있으면 명세를 보고 Pod을 생성
   -  Pod의 상태를 주기적으로 API Server에 전달
 
-## 2. Kubernetes 실습
 
 
 
-### 2-1. kubectl을 사용해서 디플로이먼트 생성하기
-
-#### 목표
-
-- 애플리케이션 디플로이먼트(Deployment)에 대해 배운다.
-- kubectl로 첫 애플리케이션을 쿠버네티스에 배포한다.
 
 
 
-* 서버 네트워크
-  * master:
-    * 192.168.231.90
-  * workstation:
-    * 192.168.231.226
-  * node1
-    * 192.168.231.83
-  * node2
-    * 192.168.231.56
-  * node3
-    * 192.168.231.23
-
-1. 연습용 가상 서버 5개 vagrant로 생성
-
-   <img src="/home/nykim/사진/스크린샷, 2020-08-03 15-50-19.png" alt="스크린샷, 2020-08-03 15-50-19" style="zoom: 67%;" />
 
 
 
-* 5개의 서버 생성이 되는 모습
 
-  ![스크린샷, 2020-08-03 15-50-46](/home/nykim/사진/스크린샷, 2020-08-03 15-50-46.png)
+## Ceph란?
+
+
+
+### 1. Ceph란?
+
+* 확장가능하고 open된 SDS(Software Defined Storage) 플랫폼
+
+* 신뢰성, 확장성, 고성능을 제공하게 설계된 분산 데이터 객체 저장소
+
+* 비정형데이터를 수용하고 현대의 인터페이스 및 레거시 인터페이스를 동시에 지원
+
+* 다음의 연결성을 제공한다.
+
+  - native language interface (C/C++, python, java ..)
+  - RESTful interface
+  - Block device interface
+  - Filesystem interface
+
+  
+
+* Ceph 스토리지 클러스터를 구성하기 위해서?
+
+  * Ceph Monitor
+  * Ceph Manager
+  * Ceph OSD( Object Storage Daemon )
+
+* Ceph File System Client를 이용하기 위해서?
+
+  * Ceph metadata Server
+
+<img src="https://image.slidesharecdn.com/cephobjectstorageatspreadshirtjuly2015cephberlinmeetup-150728070934-lva1-app6891/95/ceph-object-storage-at-spreadshirt-july-2015-ceph-berlin-meetup-7-638.jpg?cb=1438067547" alt="img" style="zoom:150%;" />
+
+
+
+
+
+
+
